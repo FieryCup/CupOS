@@ -1,7 +1,7 @@
 
 local DELAY_AFTER_CLICK = 0.25
 
-function draw_menu(x, y, content)
+function menu(x, y, content)
     local old_backgorund_color = term.getBackgroundColor()
     local old_text_color = term.getTextColor()
 
@@ -45,35 +45,29 @@ function draw_menu(x, y, content)
         end
     end
 
-    local selected_option
-    repeat
-        local _, button, click_x, click_y = os.pullEvent("mouse_click")
+    local selected_option = nil
+    
+    local _, button, click_x, click_y = os.pullEvent("mouse_click")
 
-        if button == 1 then
-            if click_x >= x and click_x <= x + menu_width - 1 and click_y >= y and click_y <= y + #content - 1 then
-                local selected = content[click_y - y + 1]
+    if button == 1 then
+        if click_x >= x and click_x <= x + menu_width - 1 and click_y >= y and click_y <= y + #content - 1 then
+            local selected = content[click_y - y + 1]
 
-                if selected[1] ~= "-" and not selected[2] then
-                    selected_option = selected[1]
+            if selected[1] ~= "-" and not selected[2] then
+                selected_option = selected[1]
 
-                    term.setBackgroundColor(colors.blue)
-                    paintutils.drawLine(x, click_y, x + menu_width - 1, click_y, colors.blue)
-                    term.setCursorPos(x + 1, click_y)
-                    
-                    if selected[2] then
-                        term.setTextColor(colors.lightGray)
-                    else
-                        term.setTextColor(colors.black)
-                    end
+                term.setBackgroundColor(colors.blue)
+                term.setTextColor(colors.white)
 
-                    term.write(selected[1])
+                paintutils.drawLine(x, click_y, x + menu_width - 1, click_y, colors.blue)
+                term.setCursorPos(x + 1, click_y)
 
-                    os.sleep(DELAY_AFTER_CLICK)
-                end
+                term.write(selected[1])
+
+                os.sleep(DELAY_AFTER_CLICK)
             end
         end
-
-    until selected_option
+    end
 
     term.setBackgroundColor(old_backgorund_color)
     term.setTextColor(old_text_color)
@@ -82,5 +76,5 @@ function draw_menu(x, y, content)
 end
 
 return {
-    draw_menu = draw_menu
+    menu = menu
 }
