@@ -1,8 +1,8 @@
 
-local painter = require("CupOS/image.painter")
+local painter = require("CupOS/image/painter")
 local file_system = require("CupOS/file_system")
-local context_menu = require("CupOS/context_menu")
-local errors = require("CupOS/errors")
+local context = require("CupOS/api/context")
+local errors = require("CupOS/api/errors")
 
 local width, height = term.getSize()
 
@@ -171,12 +171,12 @@ local function run_programm(path)
     file.close()
     local func, err = load(data)
     if not func then
-        errors.draw_bsod(path, "A compilation error has occurred", err)
+        errors.bsod(path, "A compilation error has occurred", err)
     else
         --#func is a function
         local status, err = pcall(func)
         if not status then
-            errors.draw_bsod(path, "A runtime error has occurred", err)
+            errors.bsod(path, "A runtime error has occurred", err)
         end
     end
 end
@@ -298,17 +298,22 @@ function run()
                             {"copy", true},
                             {"paste", true},
                             {"rename", true},
-                            {"delete"}
+                            {"delete"},
+                            {"restart OS"}
                         }
         
-                        local selected_option = context_menu.draw_menu(x, y, content)
+                        local selected_option = context.menu(x, y, content)
         
                         if selected_option == "delete" then
                             if fs.isReadOnly(file_directory) then
-                                bsod.draw("The file is read-only")
+                                errors.bsod(nil, "The file is read-only")
                             else
                                 fs.delete(file_directory)
                             end
+                        end
+
+                        if selected_option == "restart OS" then
+                            os.reboot()
                         end
                         
                         draw_files(files_windows, current_folder, page_index, files_per_page, 0, 0, true)
