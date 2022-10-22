@@ -1,4 +1,3 @@
-
 local painter = require("CupOS/image/painter")
 local file_system = require("CupOS/file_system")
 local context = require("CupOS/api/context")
@@ -147,7 +146,6 @@ end
 
 -- Main
 function run()
-
     term.setCursorPos(1, 1)
     term.setCursorBlink(false)
     term.setBackgroundColor(DESKTOP_BACKGROUND_COLOR)
