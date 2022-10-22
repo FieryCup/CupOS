@@ -1,0 +1,22 @@
+{
+    {
+        background = "88888e",
+        foreground = "000000",
+        text = "     x"
+    },
+    {
+        background = "777777",
+        foreground = "000000",
+        text = "      "
+    },
+    {
+        background = "777777",
+        foreground = "400000",
+        text = "> lua "
+    },
+    {
+        background = "777777",
+        foreground = "000000",
+        text = "      "
+    }
+}
