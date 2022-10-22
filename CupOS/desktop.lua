@@ -17,42 +17,6 @@ local GO_TO_PARENT_DIRECTORY_BUTTON_POS = {x = 2, y = 1}
 local fs_window_width = math.floor((width - 2) / 12)
 local fs_window_height = math.floor((height - 4) / 7)
 
--- local monitor = peripheral.find("monitor")
-
--- if monitor then
---     term.redirect(monitor)
--- end
-
--- Сброс экрана терминала
-term.setCursorPos(1, 1)
-term.setCursorBlink(false)
-term.setBackgroundColor(DESKTOP_BACKGROUND_COLOR)
-term.setTextColor(colors.white)
-term.clear()
-
--- Icons
-FOLDER_ICON = {
-    {
-        background = "441   ",
-        foreground = "888888",
-        text = "      "
-    },
-    {
-        background = "444444",
-        foreground = "777777",
-        text = "------"
-    },
-    {
-        background = "444444",
-        foreground = "777777",
-        text = "      "
-    },
-    {
-        background = "111111",
-        foreground = "ffffff",
-        text = "folder"
-    }
-}
 
 local function create_files_windows()
     local fs_window = window.create(term.current(), FS_POS_X, FS_POS_Y, fs_window_width * 12, 14)
@@ -183,6 +147,13 @@ end
 
 -- Main
 function run()
+
+    term.setCursorPos(1, 1)
+    term.setCursorBlink(false)
+    term.setBackgroundColor(DESKTOP_BACKGROUND_COLOR)
+    term.setTextColor(colors.white)
+    term.clear()
+
     local current_folder = "."
     local previous_current_folder = current_folder
 
