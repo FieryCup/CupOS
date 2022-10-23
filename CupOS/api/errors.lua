@@ -1,15 +1,13 @@
-
 local speaker = peripheral.find("speaker")
+local strings = require("cc.strings")
 
 if not speaker and ccemux then
     ccemux.attach("left", "speaker")
     speaker = peripheral.find("speaker")
 end
 
-function bsod(file, title, err)
-    
-    local strings = require("cc.strings")
 
+function blue_screen_of_death(file, title, err)
     local width, height = term.getSize()
 
     if err ~= nil then
@@ -17,7 +15,7 @@ function bsod(file, title, err)
         for i in err:gmatch("([^:]+)") do
             table.insert(err_table, i)
         end
-        
+
         if file ~= nil then
             local file_table = {}
             for i in err:gmatch("([^/]+)") do

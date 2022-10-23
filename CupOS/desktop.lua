@@ -2,6 +2,7 @@ local painter = require("CupOS/image/painter")
 local file_system = require("CupOS/file_system")
 local context = require("CupOS/api/context")
 local errors = require("CupOS/api/errors")
+local expect = require("cc.expect")
 
 local width, height = term.getSize()
 
@@ -25,15 +26,14 @@ local function create_files_windows()
     for y=1, fs_window_height do
         for x=1, fs_window_width do
             file_window = window.create(fs_window, 
-            math.floor(fs_width / fs_window_width * (x-1)+1), math.floor(fs_height / fs_window_height * (y-1)+1), 
-            12, 7)
-            
+            math.floor(fs_width / fs_window_width * (x - 1) + 1), math.floor(fs_height / fs_window_height * (y - 1) + 1), 12, 7)
             file_window.clear()
             table.insert(files_windows, file_window)
         end
     end
     return files_windows
 end
+
 
 local function draw_files(files_windows, current_folder, page_index, files_per_page, cur_x, cur_y, redraw_all)
     local files = fs.list(current_folder)
@@ -108,14 +108,13 @@ local function draw_files(files_windows, current_folder, page_index, files_per_p
                 local file_type = file_type_table[#file_type_table]
 
                 local file_icons = {
-                    ["lua"] = true,
-                    ["cosif"] = true
+                    lua = true,
+                    cosif = true
                 }
 
                 if file_icons[file_type] then
                     painter.draw(
-                        painter.load("CupOS/image/icons/"..file_type.."_file.cosif"),
-                        4, 1, file_icon)
+                        painter.load("CupOS/image/icons/" .. file_type .. "_file.cosif"), 4, 1, file_icon)
                 else
                     painter.draw(unknown_file_icon, 4, 1, file_icon)
                 end
@@ -125,7 +124,6 @@ local function draw_files(files_windows, current_folder, page_index, files_per_p
 end
 
 local function run_programm(path)
-    local expect = require("cc.expect")
 
     expect.expect(1, path, "string")
 
@@ -144,7 +142,7 @@ local function run_programm(path)
     end
 end
 
--- Main
+
 function run()
     term.setCursorPos(1, 1)
     term.setCursorBlink(false)

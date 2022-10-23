@@ -1,5 +1,3 @@
-
-
 function move_to_previous_folder(files_windows, current_folder, page_index, files_per_page)
     if current_folder ~= "." then
         local current_folder_table = {}

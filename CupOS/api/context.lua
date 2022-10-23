@@ -1,5 +1,5 @@
-
 local DELAY_AFTER_CLICK = 0.25
+
 
 function menu(x, y, content)
     local old_backgorund_color = term.getBackgroundColor()
@@ -28,7 +28,7 @@ function menu(x, y, content)
     term.setCursorPos(x, y)
     paintutils.drawBox(x + 1, y + 1, x + menu_width, y + #content, colors.gray)
     paintutils.drawFilledBox(x, y, x + menu_width - 1, y + #content - 1, colors.white)
-    
+
     for i=1, #content do
         if content[i][1] == "-" then
             term.setTextColor(colors.gray)
@@ -74,6 +74,7 @@ function menu(x, y, content)
 
     return selected_option
 end
+
 
 return {
     menu = menu
