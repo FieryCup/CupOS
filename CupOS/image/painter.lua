@@ -1,4 +1,5 @@
-local expect = require("cc.expect").expect
+local cc_expect = require("cc.expect")
+local expect, field = cc_expect.expect, cc_expect.field
 
 local function load(path)
     expect(1, path, "string")
@@ -19,36 +20,24 @@ local function draw(image, xPos, yPos, target)
     expect(3, yPos, "number")
     expect(4, target, "table", "nil")
 
+    local background = field(image, "background", "table")
+    local foreground = field(image, "foreground", "table")
+    local text = field(image, "text", "table")
     if not target then target = term end
 
     local old_background_color = target.getBackgroundColor()
     local old_text_color = target.getTextColor()
 
-    for y, line in ipairs(image) do
+    for y = 1, #text do
+        for x = 1, #text[1] do
+            local background_char = background[y][x]
+            local background_char1 = background_char == " " and colors.toBlit(old_background_color) or background_char
 
-        if string.match(line.background, " ") or string.match(line.foreground, ".") then
-            local foreground_table = {}
-            local text_table = {}
+            local foreground_char = foreground[y][x]
+            local foreground_char1 = foreground_char == " " and colors.toBlit(old_background_color) or foreground_char
 
-            for i = 1, #line.text do
-                text_table[i] = line.text:sub(i, i)
-            end
-            
-            for x=1, #line.text do
-                local background_char = line.background:sub(x, x)
-                local background = background_char == " " and colors.toBlit(old_background_color) or background_char
-
-                local foreground_char = line.foreground:sub(x, x)
-                local foreground = foreground_char == " " and colors.toBlit(old_background_color) or foreground_char
-
-                target.setCursorPos(xPos + x - 1, yPos + y - 1)
-                target.blit(line.text:sub(x, x), foreground, background)
-            end
-        else
-            for y, line in ipairs(image) do
-                target.setCursorPos(xPos, yPos + y - 1)
-                target.blit(line.text, line.foreground, line.background)
-            end
+            target.setCursorPos(xPos + x - 1, yPos + y - 1)
+            target.blit(text[x][y], foreground_char1, background_char1)
         end
     end
 
