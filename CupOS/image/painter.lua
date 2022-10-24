@@ -23,6 +23,7 @@ local function draw(image, xPos, yPos, target)
     local background = field(image, "background", "table")
     local foreground = field(image, "foreground", "table")
     local text = field(image, "text", "table")
+
     if not target then target = term end
 
     local old_background_color = target.getBackgroundColor()
@@ -30,14 +31,14 @@ local function draw(image, xPos, yPos, target)
 
     for y = 1, #text do
         for x = 1, #text[1] do
-            local background_char = background[y][x]
+            local background_char = background[y]:sub(x, x)
             local background_char1 = background_char == " " and colors.toBlit(old_background_color) or background_char
 
-            local foreground_char = foreground[y][x]
+            local foreground_char = foreground[y]:sub(x, x)
             local foreground_char1 = foreground_char == " " and colors.toBlit(old_background_color) or foreground_char
 
             target.setCursorPos(xPos + x - 1, yPos + y - 1)
-            target.blit(text[x][y], foreground_char1, background_char1)
+            target.blit(text[y]:sub(x, x), foreground_char1, background_char1)
         end
     end
 
