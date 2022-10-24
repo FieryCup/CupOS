@@ -1,22 +1,14 @@
 {
-    {
-        background = "441   ",
-        foreground = "ffffff",
-        text = "      "
-    },
-    {
-        background = "444444",
-        foreground = "ffffff",
-        text = "------"
-    },
-    {
-        background = "444444",
-        foreground = "ffffff",
-        text = "      "
-    },
-    {
-        background = "111111",
-        foreground = "ffffff",
-        text = "folder"
-    }
+    background = {"441   ",
+                  "444444",
+                  "444444",
+                  "111111"},
+    foreground = {"ffffff",
+                  "ffffff",
+                  "ffffff",
+                  "ffffff"},
+    text = {"      ",
+            "------",
+            "      ",
+            "folder"}
 }

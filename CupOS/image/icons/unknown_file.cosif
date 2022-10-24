@@ -1,22 +1,14 @@
 {
-    {
-        background = "000008",
-        foreground = " 88880",
-        text = "\131\131\131\131\131 "
-    },
-    {
-        background = "000008",
-        foreground = "ffffff",
-        text = "file  "
-    },
-    {
-        background = "000008",
-        foreground = "ffffff",
-        text = "      "
-    },
-    {
-        background = "00000 ",
-        foreground = "fffff8",
-        text = "     \143"
-    }
+    background = {"000008",
+                  "000008",
+                  "000008",
+                  "00000 "},
+    foreground = {" 88880",
+                  "ffffff",
+                  "ffffff",
+                  "fffff8"},
+    text = {"\131\131\131\131\131 ",
+            "file  ",
+            "      ",
+            "     \143"}
 }
