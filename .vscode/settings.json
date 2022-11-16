@@ -4,6 +4,9 @@
         "colors",
         "textutils",
         "peripheral",
-        "ccemux"
+        "ccemux",
+        "paintutils",
+        "window",
+        "fs"
     ]
 }
