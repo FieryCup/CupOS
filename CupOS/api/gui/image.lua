@@ -47,6 +47,39 @@ function draw(target, xPos, yPos, image)
     target.setTextColor(old_text_color)
 end
 
+function create(parent, x, y, image)
+    expect(1, parent, "table", "nil")
+    expect(2, x, "number")
+    expect(3, y, "number")
+    expect(4, image, "table")
+
+    local obj = {}
+    obj.type = "image"
+    obj.parent = parent or term.current()
+    obj.x = x
+    obj.y = y
+    obj.image = image
+    
+    function obj:updatePos()
+        if obj.parent.absoluteX == nil then
+            obj.absoluteX = obj.x
+            obj.absoluteY = obj.y
+        else
+            obj.absoluteX = obj.x + obj.parent.absoluteX - 1
+            obj.absoluteY = obj.y + obj.parent.absoluteY - 1
+        end
+    end
+
+    function obj:kill()
+    end
+
+    function obj:draw(parent)
+        draw(parent.window, obj.x, obj.y, obj.image)
+    end
+
+    return obj
+end
+
 return {
     load = load,
     draw = draw,
