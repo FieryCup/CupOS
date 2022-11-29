@@ -1,7 +1,7 @@
 local cc_expect = require("cc.expect")
 local expect, field, range = cc_expect.expect, cc_expect.field, cc_expect.range
 
-function load(path)
+function loadFile(path)
     expect(1, path, "string")
 
     local file, err = io.open(path, "r")
@@ -11,7 +11,15 @@ function load(path)
     local result = file:read("*a")
     file:close()
 
-    return textutils.unserialize(result)
+    result = textutils.unserialize(result)
+
+    local width = #result["background"][1]
+    local height = #result["background"]
+
+    result.width = width
+    result.height = height
+
+    return result
 end
 
 function draw(target, xPos, yPos, image)
@@ -73,14 +81,14 @@ function create(parent, x, y, image)
     end
 
     function obj:draw(parent)
-        draw(parent.window, obj.x, obj.y, obj.image)
+        draw(parent, obj.x, obj.y, obj.image)
     end
 
     return obj
 end
 
 return {
-    load = load,
+    load = loadFile,
     draw = draw,
     create = create
 }
