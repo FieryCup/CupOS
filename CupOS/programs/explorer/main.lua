@@ -1,15 +1,14 @@
-local thread = require("CupOS/api/thread")
-local pretty = require("cc.pretty").pretty_print
-
+local thread = require("CupOS.api.thread")
 local buttonModule = require("CupOS.api.gui.button")
 local textModule = require("CupOS.api.gui.text")
 local fieldModule = require("CupOS.api.gui.field")
-
 local imageModule = require("CupOS.api.gui.image")
+local borderedWindow = require("CupOS.api.gui.borderedWindow")
 
-local cc_strings = require("cc.strings")
+local pretty = require("cc.pretty").pretty_print
 local cc_expect = require("cc.expect")
 local expect, range = cc_expect.expect, cc_expect.range
+local cc_strings = require("cc.strings")
 
 function move_to_previous_folder(current_folder)
     expect(1, current_folder, "string")
@@ -22,7 +21,7 @@ function move_to_previous_folder(current_folder)
         end
 
         previous_folder = {}
-        for i=0, #current_folder_table - 1 do
+        for i = 0, #current_folder_table - 1 do
             table.insert(previous_folder, current_folder_table[i])
         end
 
@@ -31,18 +30,22 @@ function move_to_previous_folder(current_folder)
     return previous_folder
 end
 
+-- TODO: Добавить удаление, переименовывание и перемещение файла (с помощью контекстного меню)
+
 -- TODO: Добавить возможность замарозки и размарозки проводника
 -- TODO: Добавить возможность перемещения проводника
-local function run(startPath, x, y, width, height, backgroundColor, frameColor, textColor, filesTitleColor)
-    expect(1, startPath, "string", "nil")
-    expect(2, x, "number", "nil")
-    expect(3, y, "number", "nil")
-    expect(4, width, "number", "nil")
-    expect(5, height, "number", "nil")
-    expect(6, backgroundColor, "number", "nil")
-    expect(7, frameColor, "number", "nil")
-    expect(8, textColor, "number", "nil")
-    expect(9, filesTitleColor, "number", "nil")
+local function run(parent, startPath, x, y, width, height, backgroundColor, frameColor, textColor, filesTitleColor)
+    expect(1, parent, "table", "nil")
+    expect(2, startPath, "string", "nil")
+    expect(3, x, "number", "nil")
+    expect(4, y, "number", "nil")
+    expect(5, width, "number", "nil")
+    expect(6, height, "number", "nil")
+    expect(7, backgroundColor, "number", "nil")
+    expect(8, frameColor, "number", "nil")
+    expect(9, textColor, "number", "nil")
+    expect(10, filesTitleColor, "number", "nil")
+
     if backgroundColor then
         range(backgroundColor, 1, 32768)
     end
@@ -56,7 +59,11 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
         range(filesTitleColor, 1, 32768)
     end
 
-    local data = {}
+    if parent == nil then
+        parent = term.current()
+    end
+
+    data = {}
     data.scroll = 0
     data.path = startPath or "./"
     data.files = {}
@@ -64,13 +71,15 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
     -- TODO: Убрать в будущем
     term.clear()
 
-    local width = width or 40
-    local height = height or 15
+    width = width or 40
+    height = height or 15
 
-    local x = x or 3
-    local y = y or 2
+    x = x or 3
+    y = y or 2
 
-    local explorer = fieldModule.create(nil, x, y, width, height, colors.red)
+    local explorer = borderedWindow.create(parent, "Explorer", x, y, width, height)
+
+    -- local explorer = fieldModule.create(nil, x, y, width, height, colors.red)
     explorer.mainThread = nil
 
     explorer.backgroundColor = backgroundColor or colors.black
@@ -83,42 +92,44 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
     local footerBarText = textModule.create(footerBar, 2, 1, "", explorer.textColor, footerBar.backgroundColor)
     footerBar:addChild(footerBarText)
 
-    local workspace = fieldModule.create(explorer, 3, 2, explorer.width - 4, explorer.height - 2, explorer.backgroundColor)
+    -- local workspace = fieldModule.create(explorer, 3, 2, explorer.width - 4, explorer.height - 2, explorer.backgroundColor)
 
     -- Верхнее меню
-    local titleBar = fieldModule.create(explorer, 1, 1, explorer.width, 1, explorer.frameColor)
-    local windowTitle = textModule.create(titleBar, 2, 1, "Explorer", explorer.textColor, explorer.frameColor)
+    -- local titleBar = fieldModule.create(explorer, 1, 1, explorer.width, 1, explorer.frameColor)
+    -- local windowTitle = textModule.create(titleBar, 2, 1, "Explorer", explorer.textColor, explorer.frameColor)
 
-    local closeExplorer = function (obj)
-        explorer:kill()
-        thread.kill(explorer.mainThread)
-        -- TODO: Убрать в будущем
-        term.clear()
+    -- local closeExplorer = function (obj)
+    --     explorer:kill()
+    --     thread.kill(explorer.mainThread)
+    --     -- TODO: Убрать в будущем
+    --     term.clear()
 
-        return false
-    end
+    --     return false
+    -- end
 
-    local closeWindowButton = buttonModule.create(titleBar, titleBar.width - 2, 1, 3, 1, colors.red, closeExplorer)
-    local closeWindowText = textModule.create(closeWindowButton, 2, 1, "x", explorer.textColor, closeWindowButton.backgroundColor)
-    closeWindowButton:addChild(closeWindowText)
+    -- local closeWindowButton = buttonModule.create(titleBar, titleBar.width - 2, 1, 3, 1, colors.red, closeExplorer)
+    -- local closeWindowText = textModule.create(closeWindowButton, 2, 1, "x", explorer.textColor, closeWindowButton.backgroundColor)
+    -- closeWindowButton:addChild(closeWindowText)
 
-    local fullScreen = function (obj)
-        return false
-    end
+    -- local fullScreen = function (obj)
+    --     return false
+    -- end
 
-    local fullScreenButton = buttonModule.create(titleBar, titleBar.width - 5, 1, 3, 1, explorer.frameColor, fullScreen)
-    local fullScreenwText = textModule.create(fullScreenButton, 2, 1, "+", explorer.textColor, fullScreenButton.backgroundColor)
-    fullScreenButton:addChild(fullScreenwText)
+    -- local fullScreenButton = buttonModule.create(titleBar, titleBar.width - 5, 1, 3, 1, explorer.frameColor, fullScreen)
+    -- local fullScreenwText = textModule.create(fullScreenButton, 2, 1, "+", explorer.textColor, fullScreenButton.backgroundColor)
+    -- fullScreenButton:addChild(fullScreenwText)
 
-    local windowCollapse = function (obj)
-        return false
-    end
+    -- local windowCollapse = function (obj)
+    --     return false
+    -- end
 
-    local windowCollapseButton = buttonModule.create(titleBar, titleBar.width - 8, 1, 3, 1, explorer.frameColor, windowCollapse)
-    local windowCollapseText = textModule.create(windowCollapseButton, 2, 1, "-", explorer.textColor, windowCollapseButton.backgroundColor)
-    windowCollapseButton:addChild(windowCollapseText)
+    -- local windowCollapseButton = buttonModule.create(titleBar, titleBar.width - 8, 1, 3, 1, explorer.frameColor, windowCollapse)
+    -- local windowCollapseText = textModule.create(windowCollapseButton, 2, 1, "-", explorer.textColor, windowCollapseButton.backgroundColor)
+    -- windowCollapseButton:addChild(windowCollapseText)
 
-    titleBar:addChild(windowTitle, windowCollapseButton, fullScreenButton, closeWindowButton)
+    -- titleBar:addChild(windowTitle, windowCollapseButton, fullScreenButton, closeWindowButton)
+
+    local workspace = explorer.workspace
 
     -- Путь директории
     local pathFrame = fieldModule.create(workspace, 4, 1, workspace.width - 3, 3, explorer.backgroundColor)
@@ -127,19 +138,24 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
 
     -- Файлы
     local filesHeader = textModule.create(workspace, 1, 4, "", explorer.filesTitleColor, explorer.backgroundColor)
-    local filesTable = fieldModule.create(workspace, 1, 6, workspace.width, workspace.height - 6, explorer.backgroundColor)
+    local filesTable = fieldModule.create(workspace, 1, 6, workspace.width, workspace.height - 6,
+        explorer.backgroundColor)
 
     explorer.maxFileNameColumnWidth = math.floor(filesTable.width / 2)
-    filesHeader.text = "\149Name" .. string.rep(" ", explorer.maxFileNameColumnWidth - 5) .. "\149Type" .. string.rep(" ", explorer.maxFileNameColumnWidth / 2 - 4) .. "\149Size"
+    filesHeader.text = "\149Name" ..
+        string.rep(" ", explorer.maxFileNameColumnWidth - 5) ..
+        "\149Type" .. string.rep(" ", explorer.maxFileNameColumnWidth / 2 - 4) .. "\149Size"
 
     -- Кнопка назад
-    local previousPath = function (obj)
+    local previousPath = function(obj)
         data.path = move_to_previous_folder(data.path) .. "/"
+        data.scroll = 0
         data:updateFiles()
 
-        filesTable:draw()
+        -- filesTable:draw()
+        -- path:draw()
+        explorer.workspace:draw()
         footerBar:draw()
-        path:draw()
         return false
     end
 
@@ -150,7 +166,8 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
     pathFrame:addChild(path)
     path:addChild(pathText)
 
-    explorer:addChild(titleBar, workspace, footerBar)
+    -- explorer:addChild(titleBar, workspace, footerBar)
+    explorer:addChild(footerBar)
     workspace:addChild(backButton, pathFrame, filesHeader, filesTable)
 
     -- Измененные функции отрисовки
@@ -183,7 +200,8 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
             self.window.write(file.type)
 
             if file.type ~= "folder" then
-                self.window.setCursorPos(explorer.maxFileNameColumnWidth + math.floor(explorer.maxFileNameColumnWidth / 2) + 2, i)
+                self.window.setCursorPos(explorer.maxFileNameColumnWidth +
+                    math.floor(explorer.maxFileNameColumnWidth / 2) + 2, i)
                 self.window.write(math.ceil(file.size / 1024) .. " KB")
             end
         end
@@ -192,7 +210,7 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
     function pathFrame:draw()
         self.window.setBackgroundColor(self.backgroundColor)
         self.window.clear()
-        
+
         for i = 2, self.height - 1 do
             self.window.setBackgroundColor(explorer.frameColor)
             self.window.setTextColor(self.backgroundColor)
@@ -233,37 +251,37 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
         end
     end
 
-    function explorer:draw()
-        self.window.setBackgroundColor(self.backgroundColor)
-        self.window.clear()
-        
-        for i = 2, explorer.height - 1 do
-            self.window.setBackgroundColor(self.backgroundColor)
-            self.window.setTextColor(explorer.frameColor)
-            self.window.setCursorPos(1, i)
-            self.window.write("\149")
+    -- function explorer:draw()
+    --     self.window.setBackgroundColor(self.backgroundColor)
+    --     self.window.clear()
 
-            self.window.setBackgroundColor(explorer.frameColor)
-            self.window.setTextColor(self.backgroundColor)
-            self.window.setCursorPos(self.width, i)
-            self.window.write("\149")
-        end
+    --     for i = 2, explorer.height - 1 do
+    --         self.window.setBackgroundColor(self.backgroundColor)
+    --         self.window.setTextColor(explorer.frameColor)
+    --         self.window.setCursorPos(1, i)
+    --         self.window.write("\149")
 
-        
-        for _, childObj in ipairs(self.child) do
-            childObj:draw()
-        end
-    end
+    --         self.window.setBackgroundColor(explorer.frameColor)
+    --         self.window.setTextColor(self.backgroundColor)
+    --         self.window.setCursorPos(self.width, i)
+    --         self.window.write("\149")
+    --     end
+
+
+    --     for _, childObj in ipairs(self.child) do
+    --         childObj:draw()
+    --     end
+    -- end
 
 
     function data:updateFiles()
         local files = fs.list(self.path)
 
         local rawFiles = {}
-        
+
         pathText.text = self.path
         footerBarText.text = "Items: " .. #files .. " | Line: " .. self.scroll
-        
+
         -- Сортировка по типу
         local rawFoldersTable = {}
         local rawFilesTable = {}
@@ -287,7 +305,7 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
         for _, value in ipairs(rawFilesTable) do
             table.insert(rawFiles, value)
         end
-        
+
         -- Удаление лишних файлов в массиве
         self.files = {}
         for i = 1 + self.scroll, filesTable.height + self.scroll do
@@ -302,7 +320,6 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
         explorer:draw()
     end
 
-
     -- Функция, вызываемая при прокрутке колеса мыши
     local function scrollEvent(dir)
         local previousScroll = data.scroll
@@ -310,7 +327,7 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
         if maxScroll < 0 then
             maxScroll = 0
         end
-        
+
         data.scroll = data.scroll + dir * 2 - 1
 
         if data.scroll < 0 then
@@ -320,7 +337,7 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
         if data.scroll > maxScroll then
             data.scroll = maxScroll
         end
-        
+
         if previousScroll ~= data.scroll then
             data:updateFiles()
             filesTable:draw()
@@ -347,15 +364,14 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
 
     -- Функция, вызываемая при нажатии кнопки мыши
     local function clickEvent(button, x, y)
-        if 
-        button == 1 and
-        (x >= filesTable.absoluteX and x <= filesTable.absoluteX + filesTable.width - 1) and
-        (y >= filesTable.absoluteY and y <= filesTable.absoluteY + filesTable.height - 1)
+        if button == 1 and
+            (x >= filesTable.absoluteX and x <= filesTable.absoluteX + filesTable.width - 1) and
+            (y >= filesTable.absoluteY and y <= filesTable.absoluteY + filesTable.height - 1)
         then
             local filePos = y - filesTable.absoluteY + 1 + data.scroll
-        
+
             local file = data.files[filePos].name
-            
+
             if file then
                 local filePath = data.path .. file
                 if fs.isDir(filePath) then
@@ -372,6 +388,11 @@ local function run(startPath, x, y, width, height, backgroundColor, frameColor, 
     local function mainLoop()
         while true do
             local event, a, b, c = os.pullEvent()
+
+            if explorer.isClosed then
+                explorer:kill()
+                break
+            end
 
             if event == "mouse_scroll" then
                 scrollEvent(a)
