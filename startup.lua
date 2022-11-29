@@ -1,7 +1,12 @@
 
 local pretty = require("cc.pretty").pretty_print
 
-local explorer = require("CupOS/programs/explorer/main")
+local explorer = require("CupOS.programs.explorer.main")
+local observer = require("CupOS.programs.observer.main")
+local borderedWindow = require("CupOS.api.gui.borderedWindow")
+
+local version = require("CupOS.api.version")
+local image = require("CupOS.api.gui.image")
 
 -- pretty(explorer)
 

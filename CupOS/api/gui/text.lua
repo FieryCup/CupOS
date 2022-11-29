@@ -1,6 +1,5 @@
 local cc_expect = require("cc.expect")
-local expect = cc_expect.expect
-local range = cc_expect.range
+local expect, field, range = cc_expect.expect, cc_expect.field, cc_expect.range
 
 local function textHeight(text)
     local count = 0

@@ -1,8 +1,5 @@
 local cc_expect = require("cc.expect")
-local expect = cc_expect.expect
-local range = cc_expect.range
-
-local pretty = require("cc.pretty").pretty_print
+local expect, range = cc_expect.expect, cc_expect.range
 
 function create(parent, x, y, width, height, backgroundColor)
     expect(1, parent, "table", "nil")

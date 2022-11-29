@@ -1,11 +1,8 @@
-local cc_expect = require("cc.expect")
-local expect = cc_expect.expect
-local range = cc_expect.range
-
-local thread = require("CupOS/api/thread")
+local thread = require("CupOS.api.thread")
 local field = require("CupOS.api.gui.field")
 
-local pretty = require("cc.pretty").pretty_print
+local cc_expect = require("cc.expect")
+local expect, range = cc_expect.expect, cc_expect.range
 
 function create(parent, x, y, width, height, backgroundColor, onClick)
     expect(1, parent, "table", "nil")

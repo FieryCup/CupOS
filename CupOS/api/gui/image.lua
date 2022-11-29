@@ -1,6 +1,5 @@
 local cc_expect = require("cc.expect")
-local expect = cc_expect.expect
-local field = cc_expect.field
+local expect, field, range = cc_expect.expect, cc_expect.field, cc_expect.range
 
 function load(path)
     expect(1, path, "string")

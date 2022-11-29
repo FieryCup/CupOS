@@ -1,7 +1,7 @@
-local painter = require("CupOS/image/painter")
-local file_system = require("CupOS/file_system")
-local context = require("CupOS/api/context")
-local errors = require("CupOS/api/errors")
+local painter = require("CupOS.api.gui.image")
+local file_system = require("CupOS.file_system")
+local context = require("CupOS.api.context")
+local errors = require("CupOS.api.errors")
 local expect = require("cc.expect")
 
 local width, height = term.getSize()
@@ -88,8 +88,8 @@ local function draw_files(files_windows, current_folder, page_index, files_per_p
             file_icon.setCursorPos((file_width - #formated_file_name) / 2 + 1, file_height - 1)
             file_icon.write(formated_file_name)
 
-            local folder_icon = painter.load("CupOS/image/icons/folder.cosif")
-            local unknown_file_icon = painter.load("CupOS/image/icons/unknown_file.cosif")
+            local folder_icon = painter.load("CupOS/images/icons/folder.cosif")
+            local unknown_file_icon = painter.load("CupOS/images/icons/unknown_file.cosif")
 
             if fs.isDir(file_system.open_folder(current_folder, file_name)) then
                 icon_file = file_system.open_folder_icon(current_folder, file_name)
@@ -114,7 +114,7 @@ local function draw_files(files_windows, current_folder, page_index, files_per_p
 
                 if file_icons[file_type] then
                     painter.draw(
-                        painter.load("CupOS/image/icons/" .. file_type .. "_file.cosif"), 4, 1, file_icon)
+                        painter.load("CupOS/images/icons/" .. file_type .. "_file.cosif"), 4, 1, file_icon)
                 else
                     painter.draw(unknown_file_icon, 4, 1, file_icon)
                 end
