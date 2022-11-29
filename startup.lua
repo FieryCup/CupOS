@@ -18,3 +18,8 @@ explorer.run("./CupOS/", 1, 1, term.getSize())
 while true do
     os.sleep(100)
 end
+-- TODO: Создать установщик
+-- TODO: Переделать Desktop
+-- TODO: Добавить вывод в терминал и на экран
+-- TODO: Создать программу для просмотра картинок "Observer" в отдельный репозиторий
+-- TODO: Переместить "Explorer" в отдельный репозиторий
