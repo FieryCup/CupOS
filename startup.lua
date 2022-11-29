@@ -14,15 +14,25 @@ local image = require("CupOS.api.gui.image")
 
 -- desktop.run()
 
-explorer.run("./CupOS/", 1, 1, term.getSize())
+-- pretty(version.getOSVersion())
+-- pretty(version.compare(version.getOSVersion(), "0.0.1"))
+-- pretty(version.moreThan(version.getOSVersion(), "0.0.1"))
+-- pretty(version.moreThan(version.getOSVersion(), "0.0.0"))
 
--- TODO: Добавить вывод в терминал и на экран
+-- os.run(_ENV, "./CupOS/api/github_example.lua")
+
+explorer.run(nil, "./CupOS/", 1, 1, term.getSize())
+-- observer.run(nil, "./CupOS/images/icons/cosif_file.cosif", 1, 1, term.getSize())
+
+-- local framedWindow = borderedWindow.create(nil, "Example", 1, 1, 30, 15)
+-- framedWindow:draw()
 
 -- TODO: Убрать костыль
 -- Нужно для устранения работы ввода консоли
-while true do
-    os.sleep(100)
-end
+-- while true do
+--     os.sleep(100)
+-- end
+
 -- TODO: Создать установщик
 -- TODO: Переделать Desktop
 -- TODO: Добавить вывод в терминал и на экран
